@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vercel AI Assistant</title>
+    <style>
+        /* Yahan poora style.css ka code paste karein */
+        body {font-family: 'Arial', sans-serif;background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);display: flex;justify-content: center;align-items: center;min-height: 100vh;margin: 0;}
+        .container {background: #ffffff;border-radius: 15px;box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);padding: 30px;width: 90%;max-width: 700px;box-sizing: border-box;}
+        h1 {color: #4A90E2;text-align: center;margin-bottom: 5px;}
+        h2 {color: #888;text-align: center;font-size: 0.9em;margin-bottom: 20px;}
+        .chat-area {height: 400px;overflow-y: auto;border: 1px solid #ddd;border-radius: 10px;padding: 15px;margin-bottom: 20px;background: #fdfdfd;}
+        .message {margin-bottom: 15px;padding: 10px 15px;border-radius: 18px;max-width: 80%;line-height: 1.5;position: relative;box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);}
+        .user-message {background-color: #4A90E2;color: white;margin-left: auto;border-bottom-right-radius: 4px;}
+        .assistant-message {background-color: #e6e6e6;color: #333;margin-right: auto;border-bottom-left-radius: 4px;}
+        .assistant-message a {display: inline-block;margin-top: 10px;}
+        form {display: flex;gap: 10px;}
+        input[type="text"] {flex-grow: 1;padding: 12px;border: 1px solid #ccc;border-radius: 8px;font-size: 1em;}
+        button {background-color: #4CAF50;color: white;border: none;padding: 12px 20px;border-radius: 8px;cursor: pointer;font-size: 1em;transition: background-color 0.3s;}
+        button:hover {background-color: #45a049;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>💬 Vercel AI Assistant</h1>
+        <h2>Powered by Gemini and Serverless Python</h2>
+        <div class="chat-area" id="chat-area">
+            <div class="message assistant-message">
+                <p>Hello! Main tumhara Personal AI Assistant hoon. Kya madad karun?</p>
+            </div>
+        </div>
+        
+        <form id="chat-form">
+            <input type="hidden" name="chat_history_data" id="chat-history-data" value="[]">
+            <input type="text" name="user_input" id="user-input" placeholder="Apna sawal yahan likhein..." required autofocus>
+            <button type="submit" id="send-button">Bhejo</button>
+        </form>
+    </div>
+
+    <script>
+        const chatArea = document.getElementById('chat-area');
+        const chatForm = document.getElementById('chat-form');
+        const userInput = document.getElementById('user-input');
+        const historyInput = document.getElementById('chat-history-data');
+        const sendButton = document.getElementById('send-button');
+
+        chatArea.scrollTop = chatArea.scrollHeight;
+
+        function addMessage(role, text) {
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('message', ${role}-message);
+            // HTML code (jaise button) ko theek se display karne ke liye
+            messageDiv.innerHTML = <p>${text.replace(/\n/g, '<br>')}</p>;
+            chatArea.appendChild(messageDiv);
+            chatArea.scrollTop = chatArea.scrollHeight;
+        }
+
+        chatForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const query = userInput.value.trim();
+            if (query === "") return;
+
+            addMessage('user', query);
+            userInput.value = '';
+            sendButton.disabled = true;
+
+            addMessage('assistant', 'Assistant Soch Raha Hai...');
+            const thinkingMessage = chatArea.lastChild;
+
+            // Data ko JSON format mein taiyar karna
+            const payload = {
+                user_input: query,
+                chat_history_data: JSON.parse(historyInput.value)
+            };
+
+            try {
+                const response = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                
+                const data = await response.json();
+
+                chatArea.removeChild(thinkingMessage);
+                
+                if (data.error) {
+                    addMessage('assistant', Error: ${data.error});
+                } else {
+                    addMessage('assistant', data.response);
+                    // Nayi history ko update karna (Memory Save)
+                    historyInput.value = JSON.stringify(data.new_history);
+                }
+
+            } catch (error) {
+                chatArea.removeChild(thinkingMessage);
+                addMessage('assistant', 'Network Error: Server se baat nahi ho paayi.');
+            } finally {
+                sendButton.disabled = false;
+                userInput.focus();
+            }
+        });
+    </script>
+</body>
+</html>
