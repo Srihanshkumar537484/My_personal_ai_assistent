@@ -1,0 +1,100 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); /* Halka gradient background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+}
+
+.container {
+    background: #ffffff;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); /* Gehra shadow */
+    padding: 30px;
+    width: 90%;
+    max-width: 700px;
+    box-sizing: border-box;
+}
+
+h1 {
+    color: #4A90E2; /* Unique Blue color */
+    text-align: center;
+    margin-bottom: 5px;
+}
+
+h2 {
+    color: #888;
+    text-align: center;
+    font-size: 0.9em;
+    margin-bottom: 20px;
+}
+
+.chat-area {
+    height: 400px;
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 20px;
+    background: #fdfdfd;
+}
+
+.message {
+    margin-bottom: 15px;
+    padding: 10px 15px;
+    border-radius: 18px;
+    max-width: 80%;
+    line-height: 1.5;
+    position: relative;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.user-message {
+    background-color: #4A90E2; /* User ke messages ke liye Blue */
+    color: white;
+    margin-left: auto; /* Daayi taraf align karna */
+    border-bottom-right-radius: 4px;
+}
+
+.assistant-message {
+    background-color: #e6e6e6; /* Assistant ke messages ke liye Halka Grey */
+    color: #333;
+    margin-right: auto; /* Baayi taraf align karna */
+    border-bottom-left-radius: 4px;
+}
+
+/* Score aur Pic Buttons ke liye styles */
+.assistant-message a {
+    display: inline-block;
+    margin-top: 10px;
+}
+
+form {
+    display: flex;
+    gap: 10px;
+}
+
+input[type="text"] {
+    flex-grow: 1;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1em;
+}
+
+button {
+    background-color: #4CAF50; /* Submit button ke liye Green */
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #45a049;
+}

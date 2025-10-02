@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mera Personal Assistant | FINAL WORKING</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>💬 Aapka Personal AI Assistant (Final)</h1>
+        <h2>Yeh tareeka API update se nahi tootega!</h2>
+        <div class="chat-area">
+            
+            {% if history %}
+                {% for msg in history %}
+                    {% if msg.role == 'user' %}
+                        <div class="message user-message"><p>{{ msg.parts[0].text }}</p></div>
+                    {% else %}
+                        <div class="message assistant-message"><p>{{ msg.parts[0].text | replace('\n', '<br>') | safe }}</p></div>
+                    {% endif %}
+                {% endfor %}
+            {% else %}
+                <div class="message assistant-message">
+                    <p>Hello! Main tumhara Personal AI Assistant hoon. Kya madad karun? (Pic/Score poochho!)</p>
+                </div>
+            {% endif %}
+            
+            {% if user_input and ai_response %}
+                <div class="message user-message">
+                    <p>{{ user_input }}</p>
+                </div>
+                <div class="message assistant-message">
+                    <p>{{ ai_response | replace('\n', '<br>') | safe }}</p>
+                </div>
+            {% endif %}
+
+        </div>
+        
+        <form method="POST" action="/">
+            <input type="hidden" name="chat_history_data" value="{{ history | tojson }}">
+            
+            <input type="text" name="user_input" placeholder="Apna sawal yahan likhein..." required autofocus>
+            <button type="submit">Bhejo</button>
+        </form>
+    </div>
+
+    <script>
+        // Automatic scroll down to last message
+        const chatArea = document.querySelector('.chat-area');
+        chatArea.scrollTop = chatArea.scrollHeight;
+    </script>
+</body>
+</html>
